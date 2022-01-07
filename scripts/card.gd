@@ -3,15 +3,11 @@ extends Node2D
 
 class_name card
 
-export var card_number = 0
+const CardInfo = preload("CardInfo.gd") 
+export (CardInfo.CardType) var card_type setget set_card_type
 
-enum CardType { Coin, Bamboo, Char, Green, Red, White, Flower, Holder }
-enum CardState{None, Stacked, Temped, Resolved, PickedUp }
-
-export var card_type = CardType.Flower
-
-export var main_texture = preload("res://icon.png") setget set_main
-export var  card_name = "tmp"
+export var card_number:int = 1 setget set_card_number
+var card_name = "bamboo"
 onready var icon = get_node("main_icon")
 
 var current_drop_target:card = null;
@@ -20,17 +16,35 @@ var is_holding = false
 var mouse_offset = Vector2(0, 0)
 var mouse_position = Vector2(0, 0)
 
-#onready var main_icon = get_node("main_icon")
-# Called when the node enters the scene tree for the first time.
+func _init(in_card_info:CardInfo = null):
+	if(in_card_info != null):
+		card_name = in_card_info.card_name
+	
 func _ready():
-	icon.set_texture(main_texture)
+	icon = $main_icon
+	if(icon != null):
+		init_texture()
 	pass
-	#main_icon.set_texture(card_icon)
-	#btn_sprite.texture = card_icon;
 
+func init_texture():
+	var texture_path = "res://source_content/textures/large_icons/" + CardInfo.card_names(card_type) + "_" + String(card_number) + ".png"
+	print(texture_path)
+	if(icon != null):
+		icon.set_texture(load(texture_path))
+
+func set_card_type(value):
+	card_type = value
+	init_texture()
+	pass
+
+func set_card_number(value):
+	card_number = value
+	init_texture()
+	pass
+	
 func set_main(value):
 	var i = get_node("main_icon")
-	main_texture = value
+	#main_texture = value
 	i.set_texture(value)
 	pass
 
