@@ -2,8 +2,9 @@ extends Object
 
 class_name CardInfo
 
-enum CardType { Coin = 0, Bamboo = 1, Char = 2, Green = 3, Red = 4, White = 5, Flower = 6, Holder = 7 }
-enum CardState {None, Stacked, Temped, Resolved, PickedUp }
+const CardColors = preload("CardColors.gd")
+enum CardType { Coin = 0, Bamboo = 1, Char = 2, Green = 3, Red = 4, White = 5, Flower = 6}
+enum CardState { None, Stacked, Temped, Resolved, PickedUp }
 
 var card_name = ""
 var texture:Texture = null
@@ -18,6 +19,10 @@ func _init(in_type, in_name:String, in_texture:String, in_number:int):
 	pass
 	
 static func card_names(index):
-	var card_names = ["coins", "bamboo", "char", "dragon_green", "dragon_red", "dragon_white", "flower", "Holder"]
+	var card_names = ["coins", "bamboo", "char", "dragon_green", "dragon_red", "dragon_white", "flower"]
 	print(card_names[index])
 	return card_names[index]
+
+static func get_modulate(card_type:int):
+	var modulated_color = [CardColors.white(), CardColors.green(), CardColors.white(), CardColors.green(), CardColors.white(), CardColors.white(), CardColors.white()]
+	return modulated_color[card_type]

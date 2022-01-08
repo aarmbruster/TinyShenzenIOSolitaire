@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://scripts/card.gd" type="Script" id=1]
 [ext_resource path="res://source_content/textures/card_back.png" type="Texture" id=2]
 [ext_resource path="res://source_content/textures/card_front.png" type="Texture" id=3]
-[ext_resource path="res://icon.png" type="Texture" id=4]
+[ext_resource path="res://source_content/textures/large_icons/coins_1.png" type="Texture" id=4]
+[ext_resource path="res://scripts/stackable_entity.gd" type="Script" id=5]
 [ext_resource path="res://source_content/textures/card_shadow.png" type="Texture" id=6]
 
 [sub_resource type="RectangleShape2D" id=1]
@@ -27,7 +28,6 @@ texture = ExtResource( 3 )
 centered = false
 
 [node name="main_icon" type="Sprite" parent="."]
-modulate = Color( 0.0627451, 0.360784, 0.164706, 1 )
 position = Vector2( 61, 120 )
 texture = ExtResource( 4 )
 
@@ -41,11 +41,14 @@ __meta__ = {
 [node name="Area2D" type="Area2D" parent="."]
 
 [node name="collision" type="CollisionShape2D" parent="Area2D"]
+visible = false
 position = Vector2( 61.5, 116 )
 shape = SubResource( 1 )
 
-[node name="attach" type="Node2D" parent="."]
+[node name="stackable" type="Node2D" parent="."]
 position = Vector2( 0, 30 )
+z_index = 1
+script = ExtResource( 5 )
 
 [connection signal="button_down" from="TextureButton" to="." method="_on_TextureButton_button_down"]
 [connection signal="button_up" from="TextureButton" to="." method="_on_TextureButton_button_up"]

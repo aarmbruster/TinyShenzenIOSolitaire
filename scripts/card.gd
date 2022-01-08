@@ -8,13 +8,15 @@ export (CardInfo.CardType) var card_type setget set_card_type
 
 export var card_number:int = 1 setget set_card_number
 var card_name = "bamboo"
-onready var icon = get_node("main_icon")
+onready var icon:Sprite = get_node("main_icon")
 
-var current_drop_target:card = null;
+var current_drop_target:Node2D = null;
 
 var is_holding = false
 var mouse_offset = Vector2(0, 0)
 var mouse_position = Vector2(0, 0)
+
+var card_child:card = null
 
 func _init(in_card_info:CardInfo = null):
 	if(in_card_info != null):
@@ -27,10 +29,15 @@ func _ready():
 	pass
 
 func init_texture():
-	var texture_path = "res://source_content/textures/large_icons/" + CardInfo.card_names(card_type) + "_" + String(card_number) + ".png"
-	print(texture_path)
+	var texture_path:String;
+	if(card_type > 2):
+		texture_path = "res://source_content/textures/large_icons/" + CardInfo.card_names(card_type) + ".png"
+	else:
+		texture_path = "res://source_content/textures/large_icons/" + CardInfo.card_names(card_type) + "_" + String(card_number) + ".png"
+	print("init_texture: " + texture_path)
 	if(icon != null):
 		icon.set_texture(load(texture_path))
+		icon.modulate = CardInfo.get_modulate(card_type)
 
 func set_card_type(value):
 	card_type = value
@@ -38,7 +45,8 @@ func set_card_type(value):
 	pass
 
 func set_card_number(value):
-	card_number = value
+	card_number = int(clamp(value, 1, 9))
+	print(card_number)
 	init_texture()
 	pass
 	
@@ -59,37 +67,25 @@ func _on_TextureButton_pressed():
 func _on_TextureButton_button_down():
 	mouse_offset = get_global_mouse_position() - self.global_position 
 	is_holding = true
+	self.z_index = 255
 	pass # Replace with function body.
 
 func _on_TextureButton_button_up():
 	is_holding = false
 	var can_accept = false
 	if(current_drop_target != null):
-		can_accept = current_drop_target.can_accept_child(self)
+		can_accept = current_drop_target.get_node("stackable").can_accept_child(self)
 	if(can_accept):
-		self.get_parent().remove_child(self)
-		current_drop_target.add_child(self)
-		var count = 0;
-		current_drop_target.get_children().count(count)
-		print(current_drop_target.name + " | " + count as String)
-pass
+		get_parent().remove_child(self)
+		current_drop_target.get_node("stackable").add_child(self)
+	self.position = Vector2(0, 0)
+	current_drop_target = null
+	self.z_index = 0
 
 func _on_Area2D_area_entered(area):
-	var p = area.get_parent() as card
+	var p = area.get_parent() as Node2D
 	if(p != null && is_holding):
 		current_drop_target = p
-	pass # Replace with function body.
-
-func can_accept_child(child):
-	var card_child = child as card
-	if(card_child != null):
-		var count = 0;
-		self.get_children().count(count)
-		if(count > 0):
-			return false
-		if(self.card_type != card_child.card_type && self.card_number - child.card_number == 1):
-			return true
-	return false
 
 func _on_Area2D_body_entered(body):
 	print(body)

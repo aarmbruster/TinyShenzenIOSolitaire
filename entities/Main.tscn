@@ -46,28 +46,28 @@ disabled_texture = ExtResource( 2 )
 [node name="stack_holders" type="Node2D" parent="background"]
 
 [node name="stack_card_holder_0" parent="background/stack_holders" instance=ExtResource( 6 )]
-position = Vector2( 58, 295 )
+position = Vector2( 45, 283 )
 
 [node name="stack_card_holder_1" parent="background/stack_holders" instance=ExtResource( 6 )]
-position = Vector2( 203, 290 )
+position = Vector2( 198, 283 )
 
 [node name="stack_card_holder_2" parent="background/stack_holders" instance=ExtResource( 6 )]
-position = Vector2( 366, 296 )
+position = Vector2( 349, 283 )
 
 [node name="stack_card_holder_3" parent="background/stack_holders" instance=ExtResource( 6 )]
-position = Vector2( 520, 303 )
+position = Vector2( 501, 283 )
 
 [node name="stack_card_holder_4" parent="background/stack_holders" instance=ExtResource( 6 )]
-position = Vector2( 674, 307 )
+position = Vector2( 674, 283 )
 
 [node name="stack_card_holder_5" parent="background/stack_holders" instance=ExtResource( 6 )]
-position = Vector2( 829, 303 )
+position = Vector2( 805, 283 )
 
 [node name="stack_card_holder_6" parent="background/stack_holders" instance=ExtResource( 6 )]
-position = Vector2( 974, 298 )
+position = Vector2( 956, 283 )
 
 [node name="stack_card_holder_7" parent="background/stack_holders" instance=ExtResource( 6 )]
-position = Vector2( 1137, 304 )
+position = Vector2( 1109, 283 )
 
 [node name="tmp_holders" type="Node2D" parent="background"]
 
@@ -80,6 +80,16 @@ position = Vector2( 204, 34 )
 [node name="tmp_card_holder_2" parent="background/tmp_holders" instance=ExtResource( 6 )]
 position = Vector2( 359, 29 )
 
-[node name="card_root" parent="." instance=ExtResource( 5 )]
-position = Vector2( 241, 617 )
+[node name="card_root3" parent="." instance=ExtResource( 5 )]
+position = Vector2( 588, 477 )
+card_number = 3
+
+[node name="card_root5" parent="." instance=ExtResource( 5 )]
+position = Vector2( 646, 219 )
+card_type = 2
+card_number = 5
+
+[node name="card_root4" parent="." instance=ExtResource( 5 )]
+position = Vector2( 880, 435 )
 card_type = 1
+card_number = 4

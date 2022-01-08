@@ -9,12 +9,17 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Reference",
+"class": "CardColors",
+"language": "GDScript",
+"path": "res://scripts/CardColors.gd"
+}, {
 "base": "Object",
 "class": "CardInfo",
 "language": "GDScript",
 "path": "res://scripts/CardInfo.gd"
 }, {
-"base": "Node",
+"base": "Node2D",
 "class": "CardManager",
 "language": "GDScript",
 "path": "res://scripts/CardManager.gd"
@@ -25,6 +30,7 @@ _global_script_classes=[ {
 "path": "res://scripts/card.gd"
 } ]
 _global_script_class_icons={
+"CardColors": "",
 "CardInfo": "",
 "CardManager": "",
 "card": ""
