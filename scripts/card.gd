@@ -7,22 +7,21 @@ const CardInfo = preload("CardInfo.gd")
 export (CardInfo.CardType) var card_type setget set_card_type
 
 export var card_number:int = 1 setget set_card_number
-var card_name = "bamboo"
 onready var icon:Sprite = get_node("main_icon")
 
-var current_drop_target:Node2D = null;
+var drop_targets = []
+var drop_target:Node2D = null
 
 var is_holding = false
 var mouse_offset = Vector2(0, 0)
 var mouse_position = Vector2(0, 0)
 
-var card_child:card = null
-
-func _init(in_card_info:CardInfo = null):
-	if(in_card_info != null):
-		card_name = in_card_info.card_name
+var card_info:CardInfo = null
 	
 func _ready():
+	if(card_info != null):
+		card_type = card_info.card_type
+		card_number = card_info.card_number
 	icon = $main_icon
 	if(icon != null):
 		init_texture()
@@ -73,24 +72,32 @@ func _on_TextureButton_button_down():
 func _on_TextureButton_button_up():
 	is_holding = false
 	var can_accept = false
-	if(current_drop_target != null):
-		can_accept = current_drop_target.get_node("stackable").can_accept_child(self)
-	if(can_accept):
-		get_parent().remove_child(self)
-		current_drop_target.get_node("stackable").add_child(self)
+	if(drop_targets.size() > 0):
+		var min_dist = -1.0
+		for n in drop_targets:
+			var dist = n.global_position.distance_to(self.global_position)
+			if(dist < min_dist || min_dist == -1.0):
+				min_dist = dist
+				drop_target = n
+
+	if(drop_target != null):
+		can_accept = drop_target.get_node("stackable").can_accept_child(self)
+		if(can_accept):
+			get_parent().remove_child(self)
+			drop_target.get_node("stackable").add_child(self)
 	self.position = Vector2(0, 0)
-	current_drop_target = null
+	drop_target = null
+	drop_targets.empty()
 	self.z_index = 0
 
 func _on_Area2D_area_entered(area):
 	var p = area.get_parent() as Node2D
 	if(p != null && is_holding):
-		current_drop_target = p
+		if(drop_targets.count(p) == 0):
+			drop_targets.append(p)
 
-func _on_Area2D_body_entered(body):
-	print(body)
-	pass # Replace with function body.
-
-
-func _on_Area2D_body_shape_entered(body_rid, body, body_shape_index, local_shape_index):
-	pass # Replace with function body.
+func _on_Area2D_area_exited(area:Area2D):
+	var p = area.get_parent() as Node2D
+	if(p != null && is_holding):
+		if(drop_targets.count(p) > 0):
+			drop_targets.erase(p)

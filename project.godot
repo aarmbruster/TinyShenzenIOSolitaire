@@ -28,18 +28,24 @@ _global_script_classes=[ {
 "class": "card",
 "language": "GDScript",
 "path": "res://scripts/card.gd"
+}, {
+"base": "Node",
+"class": "solitaire",
+"language": "GDScript",
+"path": "res://scripts/solitaire.gd"
 } ]
 _global_script_class_icons={
 "CardColors": "",
 "CardInfo": "",
 "CardManager": "",
-"card": ""
+"card": "",
+"solitaire": ""
 }
 
 [application]
 
 config/name="GodotShenzenIOSolitaire"
-run/main_scene="res://entities/Main.tscn"
+run/main_scene="res://entities/main.tscn"
 boot_splash/fullsize=false
 config/icon="res://icon.png"
 
@@ -47,6 +53,7 @@ config/icon="res://icon.png"
 
 window/size/width=1278
 window/size/height=804
+window/size/resizable=false
 window/dpi/allow_hidpi=true
 
 [physics]
