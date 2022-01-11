@@ -14,4 +14,4 @@ static func green():
 	return Color(0.06, 0.36, 0.16, 1.0)
 
 static func red():
-	return Color(1.7, 20.0, 0.078 , 1.0)
+	return Color(0.588, 0.078, 0.078 , 1.0)

@@ -5,6 +5,17 @@ class_name solitaire
 const CardInfo = preload("CardInfo.gd") 
 const card = preload("card.gd")
 
+onready var stacks = [
+	$stack_holders/stack_card_holder_0,
+	$stack_holders/stack_card_holder_1,
+	$stack_holders/stack_card_holder_2,
+	$stack_holders/stack_card_holder_3,
+	$stack_holders/stack_card_holder_4,
+	$stack_holders/stack_card_holder_5,
+	$stack_holders/stack_card_holder_6,
+	$stack_holders/stack_card_holder_7
+]
+
 var cards_infos = [
 	CardInfo.new(CardInfo.CardType.Char, 1),
 	CardInfo.new(CardInfo.CardType.Char, 2),
@@ -37,7 +48,12 @@ var cards_infos = [
 
 var cards = []
 
+
 func _ready():
+
+	for i in stacks:
+		print(i)
+	
 	cards_infos.shuffle()
 	var card_scene = load("res://entities/card.tscn")
 	var p = get_node("resolved_holders/flower_resolved_card_holder")

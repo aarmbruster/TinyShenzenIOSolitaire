@@ -19,5 +19,5 @@ static func card_names(index):
 	return card_names[index]
 
 static func get_modulate(card_type:int):
-	var modulated_color = [CardColors.white(), CardColors.green(), CardColors.white(), CardColors.green(), CardColors.white(), CardColors.white(), CardColors.white()]
+	var modulated_color = [CardColors.red(), CardColors.green(), CardColors.black(), CardColors.green(), CardColors.white(), CardColors.white(), CardColors.white()]
 	return modulated_color[card_type]
