@@ -50,9 +50,6 @@ var cards = []
 
 
 func _ready():
-
-	for i in stacks:
-		print(i)
 	
 	cards_infos.shuffle()
 	var card_scene = load("res://entities/card.tscn")
@@ -64,7 +61,15 @@ func _ready():
 		p.add_child(card_inst)
 		p = card_inst
 	
-	for c in cards:
-		var tween = c.get_node("Tween")
-		tween.interpolate_property(c, "position", Vector2(0, 0), Vector2(100, 100), 1, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
-		tween.start()
+	var i_stack = 0
+	while (p as card) != null:
+		var parent = p.get_parent()
+		parent.remove_child(p)
+		stacks[i_stack % 8].get_node("stackable").add_child(p)
+		stacks[i_stack % 8] = p
+		p = parent
+		i_stack+=1
+		#var tween = c.get_node("Tween")
+		#tween.interpolate_property(c, "position", c.position, Vector2(0, 0), 1, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+		#tween.start()
+		

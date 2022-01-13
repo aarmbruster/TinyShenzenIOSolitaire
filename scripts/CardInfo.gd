@@ -15,7 +15,6 @@ func _init(in_type, in_number:int):
 	
 static func card_names(index):
 	var card_names = ["coins", "bamboo", "char", "dragon_green", "dragon_red", "dragon_white", "flower"]
-	print(card_names[index])
 	return card_names[index]
 
 static func get_modulate(card_type:int):

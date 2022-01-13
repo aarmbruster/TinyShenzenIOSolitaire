@@ -35,7 +35,6 @@ func init_texture():
 		texture_path = "res://source_content/textures/large_icons/" + CardInfo.card_names(card_type) + ".png"
 	else:
 		texture_path = "res://source_content/textures/large_icons/" + CardInfo.card_names(card_type) + "_" + String(card_number) + ".png"
-	print("init_texture: " + texture_path)
 	if(icon != null):
 		icon.set_texture(load(texture_path))
 		if(card_type == CardInfo.CardType.Bamboo):
@@ -50,7 +49,6 @@ func set_card_type(value):
 
 func set_card_number(value):
 	card_number = int(clamp(value, 1, 9))
-	print(card_number)
 	init_texture()
 	pass
 	
