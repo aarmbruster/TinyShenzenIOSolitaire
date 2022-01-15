@@ -8,8 +8,6 @@ export (CardInfo.CardType) var card_type setget set_card_type
 
 export var card_number:int = 1 setget set_card_number
 onready var icon:Sprite = get_node("main_icon")
-onready var number_top:Sprite = get_node("number_top")
-onready var number_bottom:Sprite = get_node("number_bottom")
 
 var drop_targets = []
 var drop_target:Node2D = null
@@ -39,9 +37,7 @@ func init_texture():
 		icon.set_texture(load(texture_path))
 		if(card_type == CardInfo.CardType.Bamboo):
 			icon.modulate = CardInfo.get_modulate(card_type)
-	number_top.modulate = CardInfo.get_modulate(card_type)
-	number_bottom.modulate = CardInfo.get_modulate(card_type)
-
+	
 func set_card_type(value):
 	card_type = value
 	init_texture()

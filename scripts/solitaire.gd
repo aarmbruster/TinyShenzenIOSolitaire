@@ -44,18 +44,36 @@ var cards_infos = [
 	CardInfo.new(CardInfo.CardType.Coin, 7),
 	CardInfo.new(CardInfo.CardType.Coin, 8),
 	CardInfo.new(CardInfo.CardType.Coin, 9),
+	CardInfo.new(CardInfo.CardType.Green, 0),
+	CardInfo.new(CardInfo.CardType.Green, 0),
+	CardInfo.new(CardInfo.CardType.Green, 0),
+	CardInfo.new(CardInfo.CardType.Green, 0),
+	CardInfo.new(CardInfo.CardType.Red, 0),
+	CardInfo.new(CardInfo.CardType.Red, 0),
+	CardInfo.new(CardInfo.CardType.Red, 0),
+	CardInfo.new(CardInfo.CardType.Red, 0),
+	CardInfo.new(CardInfo.CardType.White, 0),
+	CardInfo.new(CardInfo.CardType.White, 0),
+	CardInfo.new(CardInfo.CardType.White, 0),
+	CardInfo.new(CardInfo.CardType.White, 0),
+	CardInfo.new(CardInfo.CardType.Flower, 0)
 ]
 
 var cards = []
 
 
 func _ready():
-	
+	randomize()
 	cards_infos.shuffle()
 	var card_scene = load("res://entities/card.tscn")
+	var card_number_scene = load("res://entities/number_card.tscn")
 	var p = get_node("resolved_holders/flower_resolved_card_holder")
 	for card_info in cards_infos:
-		var card_inst = card_scene.instance()
+		var card_inst
+		if(card_info.card_type < 3):
+			card_inst = card_number_scene.instance()
+		else:
+			card_inst = card_scene.instance()
 		cards.append(card_inst)
 		card_inst.card_info = card_info
 		p.add_child(card_inst)
