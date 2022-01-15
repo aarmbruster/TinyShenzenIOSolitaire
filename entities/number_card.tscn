@@ -8,10 +8,16 @@
 script = ExtResource( 3 )
 
 [node name="number_top" type="Sprite" parent="." index="3"]
-position = Vector2( 39, 25 )
+position = Vector2( 16, 13 )
 texture = ExtResource( 2 )
 
 [node name="number_bottom" type="Sprite" parent="." index="4"]
-position = Vector2( 83, 206 )
+position = Vector2( 105, 219 )
 rotation = 3.14159
 texture = ExtResource( 2 )
+
+[node name="top_icon" parent="." index="5"]
+position = Vector2( 13, 32 )
+
+[node name="btm_icon" parent="." index="6"]
+position = Vector2( 110, 199 )

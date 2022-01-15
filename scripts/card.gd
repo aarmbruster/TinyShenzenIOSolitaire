@@ -8,6 +8,8 @@ export (CardInfo.CardType) var card_type setget set_card_type
 
 export var card_number:int = 1 setget set_card_number
 onready var icon:Sprite = get_node("main_icon")
+onready var top_icon:Sprite = get_node("top_icon")
+onready var btm_icon:Sprite = get_node("btm_icon")
 
 var drop_targets = []
 var drop_target:Node2D = null
@@ -28,15 +30,29 @@ func _ready():
 	pass
 
 func init_texture():
-	var texture_path:String;
+	var main_icon_path:String;
 	if(card_type > 2):
-		texture_path = "res://source_content/textures/large_icons/" + CardInfo.card_names(card_type) + ".png"
+		main_icon_path = "res://source_content/textures/large_icons/" + CardInfo.card_names(card_type) + ".png"
 	else:
-		texture_path = "res://source_content/textures/large_icons/" + CardInfo.card_names(card_type) + "_" + String(card_number) + ".png"
+		main_icon_path = "res://source_content/textures/large_icons/" + CardInfo.card_names(card_type) + "_" + String(card_number) + ".png"
 	if(icon != null):
-		icon.set_texture(load(texture_path))
-		if(card_type == CardInfo.CardType.Bamboo):
-			icon.modulate = CardInfo.get_modulate(card_type)
+		icon.set_texture(load(main_icon_path))
+		if(card_type == CardInfo.CardType.Bamboo || card_type == CardInfo.CardType.Green):
+			icon.self_modulate = CardInfo.get_modulate(card_type)
+
+
+	var small_icon_path:String;
+	small_icon_path = "res://source_content/textures/small_icons/" + CardInfo.card_names(card_type) + "_sm.png"
+	if(top_icon != null):
+		top_icon.set_texture(load(small_icon_path))
+		if(card_type == CardInfo.CardType.Bamboo || card_type == CardInfo.CardType.Green):
+			top_icon.self_modulate = CardInfo.get_modulate(card_type)
+			top_icon.self_modulate = CardInfo.get_modulate(card_type)
+	if(btm_icon != null):
+		btm_icon.set_texture(load(small_icon_path))
+		if(card_type == CardInfo.CardType.Bamboo || card_type == CardInfo.CardType.Green):
+			btm_icon.self_modulate = CardInfo.get_modulate(card_type)
+			btm_icon.self_modulate = CardInfo.get_modulate(card_type)
 	
 func set_card_type(value):
 	card_type = value

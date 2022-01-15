@@ -13,6 +13,8 @@ func _ready():
 func init_texture():
 	.init_texture()
 	if(number_top!=null):
-		print(number_top.name)
-		number_top.modulate = CardInfo.get_modulate(card_type)
-		number_bottom.modulate = CardInfo.get_modulate(card_type)
+		number_top.self_modulate = CardInfo.get_modulate(card_type)
+		number_bottom.self_modulate = CardInfo.get_modulate(card_type)
+		var number_path = "res://source_content/textures/number_" + String(card_number) + ".png"
+		number_top.set_texture(load(number_path))
+		number_bottom.set_texture(load(number_path))
