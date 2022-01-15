@@ -19,7 +19,7 @@ var mouse_offset = Vector2(0, 0)
 var mouse_position = Vector2(0, 0)
 
 var card_info:CardInfo = null
-	
+
 func _ready():
 	if(card_info != null):
 		card_type = card_info.card_type
@@ -39,8 +39,7 @@ func init_texture():
 		icon.set_texture(load(main_icon_path))
 		if(card_type == CardInfo.CardType.Bamboo || card_type == CardInfo.CardType.Green):
 			icon.self_modulate = CardInfo.get_modulate(card_type)
-
-
+	
 	var small_icon_path:String;
 	small_icon_path = "res://source_content/textures/small_icons/" + CardInfo.card_names(card_type) + "_sm.png"
 	if(top_icon != null):
@@ -53,36 +52,37 @@ func init_texture():
 		if(card_type == CardInfo.CardType.Bamboo || card_type == CardInfo.CardType.Green):
 			btm_icon.self_modulate = CardInfo.get_modulate(card_type)
 			btm_icon.self_modulate = CardInfo.get_modulate(card_type)
-	
+
+func get_card_child():
+	return get_node("stackable").get_child(0) as card
+
+func can_pick_up():
+	var child = get_card_child()
+	if(child == null):
+		return true
+	return false
+
 func set_card_type(value):
 	card_type = value
 	init_texture()
-	pass
 
 func set_card_number(value):
 	card_number = int(clamp(value, 1, 9))
 	init_texture()
-	pass
 	
 func set_main(value):
 	var i = get_node("main_icon")
-	#main_texture = value
 	i.set_texture(value)
-	pass
 
 func _process(delta):
 	if(is_holding):
 		self.global_position = get_global_mouse_position() - mouse_offset
-	pass
-
-func _on_TextureButton_pressed():
-	pass # Replace with function body.
 
 func _on_TextureButton_button_down():
-	mouse_offset = get_global_mouse_position() - self.global_position 
-	is_holding = true
-	self.z_index = 255
-	pass # Replace with function body.
+	if(can_pick_up()):
+		mouse_offset = get_global_mouse_position() - self.global_position
+		is_holding = true
+		self.z_index = 255
 
 func _on_TextureButton_button_up():
 	is_holding = false
