@@ -16,7 +16,7 @@ onready var btm_icon:Sprite = get_node("btm_icon")
 var drop_targets = []
 var drop_target:Node2D = null
 
-var resolved = false
+var resolved = false setget set_resolved
 var is_holding = false
 var mouse_offset = Vector2(0, 0)
 var mouse_position = Vector2(0, 0)
@@ -112,7 +112,7 @@ func _on_TextureButton_button_up():
 		var min_dist = -1.0
 		for n in drop_targets:
 			var dist = n.global_position.distance_to(self.global_position)
-			if(dist < min_dist || min_dist == -1.0):
+			if(dist < min_dist || min_dist == -1.0 && n.get_node("stackable").can_accept_child(self)):
 				min_dist = dist
 				drop_target = n
 
@@ -139,11 +139,10 @@ func _on_Area2D_area_exited(area:Area2D):
 		if(drop_targets.count(p) > 0):
 			drop_targets.erase(p)
 
-func get_root_parent():
-	return get_parent().get_parent() as Node2D
-	var card_parent = get_parent().get_parent() as card
-	if card_parent != null:
-		return card_parent
-	var holder_parent = get_parent().get_parend() as card_holder
-	if holder_parent != null:
-		return holder_parent
+func get_stackable_offset():
+	var r = 0 if resolved else 30
+	return r
+
+func set_resolved(in_resolved:bool):
+	resolved = in_resolved
+	$stackable.set_position(Vector2(0, get_stackable_offset()))
