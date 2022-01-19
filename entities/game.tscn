@@ -32,27 +32,35 @@ __meta__ = {
 
 [node name="stack_card_holder_0" parent="stack_holders" instance=ExtResource( 5 )]
 position = Vector2( 45, 283 )
+holder_type = 0
 
 [node name="stack_card_holder_1" parent="stack_holders" instance=ExtResource( 5 )]
 position = Vector2( 198, 283 )
+holder_type = 0
 
 [node name="stack_card_holder_2" parent="stack_holders" instance=ExtResource( 5 )]
 position = Vector2( 349, 283 )
+holder_type = 0
 
 [node name="stack_card_holder_3" parent="stack_holders" instance=ExtResource( 5 )]
 position = Vector2( 501, 283 )
+holder_type = 0
 
 [node name="stack_card_holder_4" parent="stack_holders" instance=ExtResource( 5 )]
 position = Vector2( 652, 283 )
+holder_type = 0
 
 [node name="stack_card_holder_5" parent="stack_holders" instance=ExtResource( 5 )]
 position = Vector2( 805, 283 )
+holder_type = 0
 
 [node name="stack_card_holder_6" parent="stack_holders" instance=ExtResource( 5 )]
 position = Vector2( 956, 283 )
+holder_type = 0
 
 [node name="stack_card_holder_7" parent="stack_holders" instance=ExtResource( 5 )]
 position = Vector2( 1109, 283 )
+holder_type = 0
 
 [node name="tmp_holders" type="Node2D" parent="."]
 __meta__ = {
@@ -75,15 +83,19 @@ __meta__ = {
 
 [node name="flower_resolved_card_holder" parent="resolved_holders" instance=ExtResource( 5 )]
 position = Vector2( 614, 19 )
+holder_type = 1
 
 [node name="green_resolved_card_holder" parent="resolved_holders" instance=ExtResource( 5 )]
 position = Vector2( 806, 19 )
+holder_type = 2
 
 [node name="red_resolved_card_holder" parent="resolved_holders" instance=ExtResource( 5 )]
 position = Vector2( 1109, 19 )
+holder_type = 2
 
 [node name="white_resolved_card_holder" parent="resolved_holders" instance=ExtResource( 5 )]
 position = Vector2( 957, 19 )
+holder_type = 2
 
 [node name="resolved_btns" type="Node2D" parent="."]
 __meta__ = {
@@ -100,3 +112,6 @@ disabled_texture = ExtResource( 2 )
 [node name="white_resolve_btn" parent="resolved_btns" instance=ExtResource( 4 )]
 position = Vector2( 497, 18 )
 disabled_texture = ExtResource( 1 )
+
+[node name="discard" parent="." instance=ExtResource( 5 )]
+position = Vector2( -100, -200 )
