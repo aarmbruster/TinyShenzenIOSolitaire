@@ -9,27 +9,32 @@ const card_holder = preload("card_holder.gd")
 
 onready var stacks = [ $stack_holders/stack_card_holder_0, $stack_holders/stack_card_holder_1, $stack_holders/stack_card_holder_2, $stack_holders/stack_card_holder_3, $stack_holders/stack_card_holder_4, $stack_holders/stack_card_holder_5, $stack_holders/stack_card_holder_6, $stack_holders/stack_card_holder_7]
 onready var resolved_stacks = [$resolved_holders/green_resolved_card_holder, $resolved_holders/white_resolved_card_holder, $resolved_holders/red_resolved_card_holder]
-onready var resolved_btns = [$resolved_btns/white_resolve_btn, $resolved_btns/green_resolve_btn, $resolved_btns/red_resolve_btn]
+onready var tmp_stacks = [$tmp_holders/tmp_card_holder_0, $tmp_holders/tmp_card_holder_1, $tmp_holders/tmp_card_holder_2]
+onready var resolved_btns = [$resolved_btns/red_resolve_btn, $resolved_btns/green_resolve_btn, $resolved_btns/white_resolve_btn]
 
 var cards_infos = [
 	CardInfo.new(CardInfo.CardType.Char, 1), CardInfo.new(CardInfo.CardType.Char, 2), CardInfo.new(CardInfo.CardType.Char, 3), CardInfo.new(CardInfo.CardType.Char, 4), CardInfo.new(CardInfo.CardType.Char, 5), CardInfo.new(CardInfo.CardType.Char, 6), CardInfo.new(CardInfo.CardType.Char, 7), CardInfo.new(CardInfo.CardType.Char, 8), CardInfo.new(CardInfo.CardType.Char, 9),
 	CardInfo.new(CardInfo.CardType.Bamboo, 1), CardInfo.new(CardInfo.CardType.Bamboo, 2), CardInfo.new(CardInfo.CardType.Bamboo, 3), CardInfo.new(CardInfo.CardType.Bamboo, 4), CardInfo.new(CardInfo.CardType.Bamboo, 5), CardInfo.new(CardInfo.CardType.Bamboo, 6), CardInfo.new(CardInfo.CardType.Bamboo, 7), CardInfo.new(CardInfo.CardType.Bamboo, 8), CardInfo.new(CardInfo.CardType.Bamboo, 9),
 	CardInfo.new(CardInfo.CardType.Coin, 1), CardInfo.new(CardInfo.CardType.Coin, 2), CardInfo.new(CardInfo.CardType.Coin, 3), CardInfo.new(CardInfo.CardType.Coin, 4), CardInfo.new(CardInfo.CardType.Coin, 5), CardInfo.new(CardInfo.CardType.Coin, 6), CardInfo.new(CardInfo.CardType.Coin, 7), CardInfo.new(CardInfo.CardType.Coin, 8), CardInfo.new(CardInfo.CardType.Coin, 9),
-	CardInfo.new(CardInfo.CardType.Green, 0), CardInfo.new(CardInfo.CardType.Green, 0), CardInfo.new(CardInfo.CardType.Green, 0), CardInfo.new(CardInfo.CardType.Green, 0),
 	CardInfo.new(CardInfo.CardType.Red, 0), CardInfo.new(CardInfo.CardType.Red, 0), CardInfo.new(CardInfo.CardType.Red, 0), CardInfo.new(CardInfo.CardType.Red, 0),
+	CardInfo.new(CardInfo.CardType.Green, 0), CardInfo.new(CardInfo.CardType.Green, 0), CardInfo.new(CardInfo.CardType.Green, 0), CardInfo.new(CardInfo.CardType.Green, 0),
 	CardInfo.new(CardInfo.CardType.White, 0), CardInfo.new(CardInfo.CardType.White, 0), CardInfo.new(CardInfo.CardType.White, 0),CardInfo.new(CardInfo.CardType.White, 0),
 	CardInfo.new(CardInfo.CardType.Flower, 0)
 ]
 
 var cards = []
 
+var green_ready = false
+var white_ready = false
+var red_ready = false
+
 func _ready():
 
 	for resolve_btn in resolved_btns:
-		pass
+		resolve_btn.connect("resolved", self, "_on_resolved_pressed")
 
-	randomize()
-	cards_infos.shuffle()
+	#randomize()
+	#cards_infos.shuffle()
 	var card_scene = load("res://entities/card.tscn")
 	var card_number_scene = load("res://entities/number_card.tscn")
 	var p = get_node("resolved_holders/flower_resolved_card_holder")
@@ -83,9 +88,27 @@ func try_resolve_card(in_card):
 		return true
 	return false
 
+func is_tmp_avail():
+	for h in tmp_stacks:
+		if h.get_node("stackable").get_child_count() < 1:
+			return true
+	return false
+
+func check_special(spot_avail: bool, special_cards):
+	if special_cards.size() < 4:
+		return false
+
+	for s in special_cards:
+		if spot_avail || s.is_on_temp():
+			return true
+	return false
+
 func _on_card_placed(placed_card:card):
 	#iterate through cards to see if we can auto-resolve
 	var check_again = false
+	var white_cards = []
+	var green_cards = []
+	var red_cards = []
 	for c in cards:
 		if c.resolved:
 			continue
@@ -102,5 +125,57 @@ func _on_card_placed(placed_card:card):
 				c.set_resolved(true)
 				check_again = true
 				break
+		
+		if c.card_type == CardInfo.CardType.Red:
+			red_cards.append(c)
+		if c.card_type == CardInfo.CardType.Green:
+			green_cards.append(c)
+		if c.card_type == CardInfo.CardType.White:
+			white_cards.append(c)
+
+	var tmp_spot_avail = is_tmp_avail()
+	red_ready =  check_special(tmp_spot_avail, red_cards)
+	green_ready =  check_special(tmp_spot_avail, green_cards)
+	white_ready =  check_special(tmp_spot_avail, white_cards)
+	
+	if(red_ready):
+		$resolved_btns/red_resolve_btn.set_ready_state(true)
+	if(green_ready):
+		$resolved_btns/green_resolve_btn.set_ready_state(true)
+	if(white_ready):
+		$resolved_btns/white_resolve_btn.set_ready_state(true)
+
 	if check_again:
 		_on_card_placed(null)
+
+func get_resolve_holder(specials):
+	for s in specials:
+		if s.is_on_temp():
+			return s.get_parent().get_parent()
+	for h in tmp_stacks:
+		if h.get_node("stackable").get_child_count() < 1:
+			return h
+	return null
+
+func resolve_special(in_card_type:int):
+	var specials = []
+	for c in cards:
+		if c.card_type == in_card_type + 3:
+			specials.append(c)
+	var resolve_stack = get_resolve_holder(specials)
+	for s in specials:
+		s.place(resolve_stack.get_node("stackable"))
+		s.set_resolved(true)
+
+func _on_resolved_pressed(card_type:int):
+	if(card_type == 0 && red_ready):
+		resolve_special(card_type)
+		return
+	if(card_type == 1 && green_ready):
+		resolve_special(card_type)
+		return
+	if(card_type == 2 && white_ready):
+		resolve_special(card_type)
+		return
+
+

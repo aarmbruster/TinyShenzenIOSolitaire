@@ -23,6 +23,8 @@ var mouse_position = Vector2(0, 0)
 
 var card_info:CardInfo = null
 
+var temped = false
+
 signal card_placed(placed_card)
 
 func _ready():
@@ -89,6 +91,8 @@ func stackable_node():
 	return get_node("stackable")
 
 func place(target_stackable:Node2D):
+	if(get_parent() == null):
+		return
 	get_parent().remove_child(self)
 	target_stackable.add_child(self)
 	self.position = Vector2(0, 0)
@@ -99,6 +103,12 @@ func _on_TextureButton_button_down():
 		mouse_offset = get_global_mouse_position() - self.global_position
 		is_holding = true
 		self.z_index = 255
+
+func is_on_temp():
+	if get_parent() == null || get_parent().get_parent() == null:
+		return false
+	var p = get_parent().get_parent() as card_holder
+	return p!=null && p.holder_type == card_holder.HolderType.Temp
 
 func _on_TextureButton_button_up():
 	#temporary debug testing option for removing cards from a stack
@@ -114,8 +124,8 @@ func _on_TextureButton_button_up():
 			var dist = n.global_position.distance_to(self.global_position)
 			if(dist < min_dist || min_dist == -1.0 && n.get_node("stackable").can_accept_child(self)):
 				min_dist = dist
-				drop_target = n
 
+				drop_target = n
 	if(drop_target != null):
 		can_accept = drop_target.get_node("stackable").can_accept_child(self)
 		if(can_accept):

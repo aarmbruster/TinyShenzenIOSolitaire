@@ -1,7 +1,5 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://source_content/textures/button_white_down.png" type="Texture" id=1]
-[ext_resource path="res://source_content/textures/button_red_down.png" type="Texture" id=2]
 [ext_resource path="res://source_content/textures/table_large.png" type="Texture" id=3]
 [ext_resource path="res://entities/resolve_btn.tscn" type="PackedScene" id=4]
 [ext_resource path="res://entities/card_holder.tscn" type="PackedScene" id=5]
@@ -102,16 +100,16 @@ __meta__ = {
 "_edit_lock_": true
 }
 
+[node name="red_resolve_btn" parent="resolved_btns" instance=ExtResource( 4 )]
+position = Vector2( 497, 18 )
+
 [node name="green_resolve_btn" parent="resolved_btns" instance=ExtResource( 4 )]
 position = Vector2( 497, 101 )
-
-[node name="red_resolve_btn" parent="resolved_btns" instance=ExtResource( 4 )]
-position = Vector2( 497, 184 )
-disabled_texture = ExtResource( 2 )
+btn_type = 1
 
 [node name="white_resolve_btn" parent="resolved_btns" instance=ExtResource( 4 )]
-position = Vector2( 497, 18 )
-disabled_texture = ExtResource( 1 )
+position = Vector2( 497, 184 )
+btn_type = 2
 
 [node name="discard" parent="." instance=ExtResource( 5 )]
 position = Vector2( -100, -200 )

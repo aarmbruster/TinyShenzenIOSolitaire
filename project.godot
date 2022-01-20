@@ -20,11 +20,6 @@ _global_script_classes=[ {
 "path": "res://scripts/CardInfo.gd"
 }, {
 "base": "Node2D",
-"class": "CardManager",
-"language": "GDScript",
-"path": "res://scripts/CardManager.gd"
-}, {
-"base": "Node2D",
 "class": "card",
 "language": "GDScript",
 "path": "res://scripts/card.gd"
@@ -34,6 +29,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://scripts/number_card.gd"
 }, {
+"base": "Node2D",
+"class": "resolved_btn",
+"language": "GDScript",
+"path": "res://scripts/resolved_btn.gd"
+}, {
 "base": "Node",
 "class": "solitaire",
 "language": "GDScript",
@@ -42,9 +42,9 @@ _global_script_classes=[ {
 _global_script_class_icons={
 "CardColors": "",
 "CardInfo": "",
-"CardManager": "",
 "card": "",
 "number_card": "",
+"resolved_btn": "",
 "solitaire": ""
 }
 

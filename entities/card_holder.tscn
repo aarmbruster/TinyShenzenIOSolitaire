@@ -17,5 +17,3 @@ shape = SubResource( 1 )
 
 [node name="stackable" type="Node2D" parent="."]
 script = ExtResource( 2 )
-
-[connection signal="tree_entered" from="Area2D/CollisionShape2D" to="." method="_on_CollisionShape2D_tree_entered"]

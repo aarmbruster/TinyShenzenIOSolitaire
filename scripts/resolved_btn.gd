@@ -1,23 +1,49 @@
 extends Node2D
 
-const CardInfo = preload("CardInfo.gd")
-export (CardInfo.CardType) var card_type setget set_card_type
-export var disabled_texture = preload("res://source_content/textures/button_green_down.png");
+class_name resolved_btn
 
-signal resolved_activated(card_type)
+var is_ready_to_resolve: bool = false
+var is_resolved: bool = false
+
+enum ButtonType {Red = 0, Green = 1, White = 2}
+export (ButtonType) var btn_type setget set_btn_type
+
+signal resolved(btn_type)
 
 onready var btn = get_node("btn")
 
+var btn_names = ["red", "green", "white"]
 # Called when the node enters the scene tree for the first time.
-func _ready():
-	btn.texture_disabled = disabled_texture;
 
-	pass
-	
+func set_ready_state(in_is_ready:bool):
+	is_ready_to_resolve = in_is_ready
+	if is_ready_to_resolve:
+		$btn.texture_normal = load("res://source_content/textures/button_" + btn_names[btn_type] + "_active.png")
+		$btn.texture_hover = load("res://source_content/textures/button_" + btn_names[btn_type] + "_active.png")
+	else:
+		$btn.texture_normal = load("res://source_content/textures/button_" + btn_names[btn_type] + "_up.png")
+
+func set_resolved_state(in_is_resolved:bool):
+	is_resolved = in_is_resolved
+	if is_resolved:
+		$btn.texture_normal = load("res://source_content/textures/button_" + btn_names[btn_type] + "_down.png")
+		$btn.texture_hover = load("res://source_content/textures/button_" + btn_names[btn_type] + "_down.png")
+	else:
+		$btn.texture_normal = load("res://source_content/textures/button_" + btn_names[btn_type] + "_up.png")
+
 func _on_btn_pressed():
-	emit_signal("resolved_activated", card_type)
-	#btn_sprite.texture = card_icon;
+	emit_signal("resolved", btn_type)
 
-func set_card_type(in_card_type):
-	card_type = in_card_type
-	pass
+func init_cosmetics():
+	$btn.texture_normal = load("res://source_content/textures/button_" + btn_names[btn_type] + "_up.png")
+	$btn.texture_focused = load("res://source_content/textures/button_" + btn_names[btn_type] + "_up.png")
+	$btn.texture_pressed = load("res://source_content/textures/button_" + btn_names[btn_type] + "_up.png")
+	$btn.texture_disabled = load("res://source_content/textures/button_" + btn_names[btn_type] + "_up.png")
+	$btn.texture_hover = load("res://source_content/textures/button_" + btn_names[btn_type] + "_up.png")
+
+func _ready():
+	init_cosmetics()
+
+func set_btn_type(in_btn_type):
+	btn_type = in_btn_type
+	init_cosmetics()
