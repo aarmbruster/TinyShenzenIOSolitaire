@@ -33,8 +33,8 @@ func _ready():
 	for resolve_btn in resolved_btns:
 		resolve_btn.connect("resolved", self, "_on_resolved_pressed")
 
-	#randomize()
-	#cards_infos.shuffle()
+	randomize()
+	cards_infos.shuffle()
 	var card_scene = load("res://entities/card.tscn")
 	var card_number_scene = load("res://entities/number_card.tscn")
 	var p = get_node("resolved_holders/flower_resolved_card_holder")
