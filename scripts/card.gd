@@ -60,8 +60,11 @@ func init_texture():
 			btm_icon.self_modulate = CardInfo.get_modulate(card_type)
 			btm_icon.self_modulate = CardInfo.get_modulate(card_type)
 
+func has_child():
+	return get_node("stackable").get_children().size() > 0
+
 func get_card_child():
-	if get_node("stackable").get_children().size() > 0:
+	if has_child():
 		return get_node("stackable").get_child(0) as card
 	return null
 
@@ -93,9 +96,11 @@ func stackable_node():
 func place(target_stackable:Node2D):
 	if(get_parent() == null):
 		return
+	var from_loc = self.global_position
 	get_parent().remove_child(self)
 	target_stackable.add_child(self)
-	self.position = Vector2(0, 0)
+	$tweener.interpolate_property(self, "global_position", from_loc, get_parent().global_position, 0.1, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+	$tweener.start()
 	self.z_index = 0
 
 func _on_TextureButton_button_down():	
@@ -134,7 +139,6 @@ func _on_TextureButton_button_up():
 	drop_targets.empty()
 	self.z_index = 0
 	if drop_target != null:
-		emit_signal("card_placed", self)
 		drop_target = null
 
 func _on_Area2D_area_entered(area):
@@ -156,3 +160,7 @@ func get_stackable_offset():
 func set_resolved(in_resolved:bool):
 	resolved = in_resolved
 	$stackable.set_position(Vector2(0, get_stackable_offset()))
+
+
+func _on_tweener_tween_completed(object, key):
+	emit_signal("card_placed", self)

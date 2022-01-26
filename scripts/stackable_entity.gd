@@ -14,6 +14,8 @@ func can_accept_child(child:card):
 			return true
 	var holder_parent = get_parent() as card_holder
 	if(holder_parent != null):
+		if(holder_parent.holder_type == card_holder.HolderType.Temp && child.has_child()):
+			return false
 		if(holder_parent.holder_type == card_holder.HolderType.Flower || holder_parent.holder_type == card_holder.HolderType.Resolved):
 			return false
 		return true

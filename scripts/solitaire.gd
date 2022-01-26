@@ -118,12 +118,10 @@ func _on_card_placed(placed_card:card):
 			c.get_parent().remove_child(c)
 			$resolved_holders/flower_resolved_card_holder.get_node("stackable").add_child(c)
 			c.set_resolved(true)
-			check_again = true
 			break
 		if c.card_type < 3 && !c.resolved: #if it's a number card try to resolve
 			if try_resolve_card(c):
 				c.set_resolved(true)
-				check_again = true
 				break
 		
 		if c.card_type == CardInfo.CardType.Red:

@@ -61,9 +61,10 @@ position = Vector2( 0, 30 )
 z_index = 1
 script = ExtResource( 5 )
 
-[node name="Tween" type="Tween" parent="."]
+[node name="tweener" type="Tween" parent="."]
 
 [connection signal="button_down" from="TextureButton" to="." method="_on_TextureButton_button_down"]
 [connection signal="button_up" from="TextureButton" to="." method="_on_TextureButton_button_up"]
 [connection signal="area_entered" from="Area2D" to="." method="_on_Area2D_area_entered"]
 [connection signal="area_exited" from="Area2D" to="." method="_on_Area2D_area_exited"]
+[connection signal="tween_completed" from="tweener" to="." method="_on_tweener_tween_completed"]
