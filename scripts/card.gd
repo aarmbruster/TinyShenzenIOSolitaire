@@ -24,6 +24,12 @@ var mouse_position = Vector2(0, 0)
 var card_info:CardInfo = null
 
 var temped = false
+var dealt = false
+
+var interp_val = 0.0
+
+var from_loc = Vector2.ZERO
+var desired_position = Vector2.ZERO
 
 signal card_placed(placed_card)
 
@@ -69,10 +75,7 @@ func get_card_child():
 	return null
 
 func can_pick_up():
-	var child = get_card_child()
-	if(child == null):
-		return true
-	return false
+	return !resolved && !has_child()
 
 func set_card_type(value):
 	card_type = value
@@ -93,17 +96,27 @@ func _process(_delta):
 func stackable_node():
 	return get_node("stackable")
 
-func place(target_stackable:Node2D):
+func place(target_stackable:Node2D, delay:float = 0.0, animate = true):
 	if(get_parent() == null):
 		return
-	var from_loc = self.global_position
+	from_loc = self.global_position
 	get_parent().remove_child(self)
 	target_stackable.add_child(self)
-	$tweener.interpolate_property(self, "global_position", from_loc, get_parent().global_position, 0.1, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
-	$tweener.start()
-	self.z_index = 0
+	desired_position = target_stackable.global_position
+	if animate:
+		var tw = $tweener as Tween
+		tw.interpolate_method(self, "tween_method", 0.0, 1.0, 0.2, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT, 0)
+		#$tweener.interpolate_property(self, "interp_val", 0.0, 1.0, 3, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT, 0)
+		$tweener.start()
+	else:
+		self.z_index = 0
 
-func _on_TextureButton_button_down():	
+func tween_method(val):
+	if(self.card_type == CardInfo.CardType.Flower):
+		print("val: " + str(val))
+	self.global_position = lerp(from_loc, desired_position, val)
+
+func _on_TextureButton_button_down():
 	if(can_pick_up()):
 		mouse_offset = get_global_mouse_position() - self.global_position
 		is_holding = true
@@ -134,7 +147,7 @@ func _on_TextureButton_button_up():
 	if(drop_target != null):
 		can_accept = drop_target.get_node("stackable").can_accept_child(self)
 		if(can_accept):
-			place(drop_target.get_node("stackable"))
+			place(drop_target.get_node("stackable"), false)
 	self.position = Vector2(0, 0)
 	drop_targets.empty()
 	self.z_index = 0
@@ -161,6 +174,18 @@ func set_resolved(in_resolved:bool):
 	resolved = in_resolved
 	$stackable.set_position(Vector2(0, get_stackable_offset()))
 
+func _on_tweener_tween_completed(_object, _key):
+	if dealt:
+		emit_signal("card_placed", self)
+		self.position = Vector2.ZERO
+		self.z_index = 0
+	else:
+		print("dealt")
+		dealt = true
 
-func _on_tweener_tween_completed(object, key):
-	emit_signal("card_placed", self)
+func _on_tweener_tween_step(object:Object, key:NodePath, elapsed:float, value:Object):
+	var c = object as card
+	#print("elapsed: " + str(c.interp_val))
+	
+
+	#self.global_position = lerp(global_position, desired_position, c.interp_val)

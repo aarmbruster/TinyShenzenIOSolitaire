@@ -35,15 +35,15 @@ func _ready():
 
 	randomize()
 	cards_infos.shuffle()
-	var card_scene = load("res://entities/card.tscn")
 	var card_number_scene = load("res://entities/number_card.tscn")
+	var special_card_scene = load("res://entities/special_card.tscn")
 	var p = get_node("resolved_holders/flower_resolved_card_holder")
 	for card_info in cards_infos:
 		var card_inst
 		if(card_info.card_type < 3):
 			card_inst = card_number_scene.instance()
 		else:
-			card_inst = card_scene.instance()
+			card_inst = special_card_scene.instance()
 		cards.append(card_inst)
 		card_inst.card_info = card_info
 		card_inst.connect("card_placed", self, "_on_card_placed")
@@ -53,14 +53,13 @@ func _ready():
 	var i_stack = 0
 	while (p as card) != null:
 		var parent = p.get_parent()
-		parent.remove_child(p)
-		stacks[i_stack % 8].get_node("stackable").add_child(p)
+		#parent.remove_child(p)
+		#stacks[i_stack % 8].get_node("stackable").add_child(p)
+		p.place(stacks[i_stack % 8].get_node("stackable"), 0.1 * i_stack)
+
 		stacks[i_stack % 8] = p
 		p = parent
 		i_stack+=1
-		#var tween = c.get_node("Tween")
-		#tween.interpolate_property(c, "position", c.position, Vector2(0, 0), 1, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
-		#tween.start()
 	
 	check_ends()
 	if cards.size() > 0:

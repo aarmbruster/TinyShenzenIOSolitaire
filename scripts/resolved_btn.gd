@@ -17,7 +17,7 @@ var btn_names = ["red", "green", "white"]
 
 func set_ready_state(in_is_ready:bool):
 	is_ready_to_resolve = in_is_ready
-	if is_ready_to_resolve:
+	if is_ready_to_resolve && !is_resolved:
 		$btn.texture_normal = load("res://source_content/textures/button_" + btn_names[btn_type] + "_active.png")
 		$btn.texture_hover = load("res://source_content/textures/button_" + btn_names[btn_type] + "_active.png")
 	else:
@@ -25,6 +25,7 @@ func set_ready_state(in_is_ready:bool):
 
 func set_resolved_state(in_is_resolved:bool):
 	is_resolved = in_is_resolved
+	$btn.disabled=is_resolved
 	if is_resolved:
 		$btn.texture_normal = load("res://source_content/textures/button_" + btn_names[btn_type] + "_down.png")
 		$btn.texture_hover = load("res://source_content/textures/button_" + btn_names[btn_type] + "_down.png")
@@ -32,13 +33,15 @@ func set_resolved_state(in_is_resolved:bool):
 		$btn.texture_normal = load("res://source_content/textures/button_" + btn_names[btn_type] + "_up.png")
 
 func _on_btn_pressed():
-	emit_signal("resolved", btn_type)
+	if is_ready_to_resolve && !is_resolved:
+		set_resolved_state(true)
+		emit_signal("resolved", btn_type)
 
 func init_cosmetics():
 	$btn.texture_normal = load("res://source_content/textures/button_" + btn_names[btn_type] + "_up.png")
 	$btn.texture_focused = load("res://source_content/textures/button_" + btn_names[btn_type] + "_up.png")
 	$btn.texture_pressed = load("res://source_content/textures/button_" + btn_names[btn_type] + "_up.png")
-	$btn.texture_disabled = load("res://source_content/textures/button_" + btn_names[btn_type] + "_up.png")
+	$btn.texture_disabled = load("res://source_content/textures/button_" + btn_names[btn_type] + "_down.png")
 	$btn.texture_hover = load("res://source_content/textures/button_" + btn_names[btn_type] + "_up.png")
 
 func _ready():
