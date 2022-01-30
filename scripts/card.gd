@@ -1,7 +1,7 @@
 tool
 extends Node2D
 
-class_name card
+class_name Card
 
 const CardInfo = preload("CardInfo.gd")
 export (CardInfo.CardType) var card_type setget set_card_type
@@ -71,7 +71,7 @@ func has_child():
 
 func get_card_child():
 	if has_child():
-		return get_node("stackable").get_child(0) as card
+		return get_node("stackable").get_child(0) as Card
 	return null
 
 func can_pick_up():

@@ -3,7 +3,7 @@ extends Node
 class_name solitaire
 
 const CardInfo = preload("CardInfo.gd") 
-const card = preload("card.gd")
+const Card = preload("Card.gd")
 const number_card = preload("number_card.gd")
 const card_holder = preload("card_holder.gd")
 
@@ -55,7 +55,7 @@ func _ready():
 		p = card_inst
 	
 	var i_stack = 0
-	while (p as card) != null:
+	while (p as Card) != null:
 		var parent = p.get_parent()
 		p.place(stacks[i_stack % 8].get_node("stackable"), 0.1 * i_stack, 0.2)
 		stacks[i_stack % 8] = p
@@ -92,15 +92,15 @@ func check_special(spot_avail: bool, special_cards):
 			return true
 	return false
 
-func on_card_transient(transient_card:card):
+func on_card_transient(transient_card:Card):
 	add_child(transient_card)
 
-func on_card_dealt(dealt_card:card):
+func on_card_dealt(dealt_card:Card):
 	dealt_index += 1
 	if dealt_index == 40:
 		_on_card_placed(dealt_card)
 
-func _on_card_placed(placed_card:card):
+func _on_card_placed(placed_card:Card):
 	#iterate through cards to see if we can auto-resolve
 	var check_again = false
 	var white_cards = []

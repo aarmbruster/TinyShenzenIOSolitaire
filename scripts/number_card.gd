@@ -1,4 +1,4 @@
-extends card
+extends Card
 
 class_name number_card
 

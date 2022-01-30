@@ -1,5 +1,5 @@
 tool
-extends "res://scripts/card.gd"
+extends "res://scripts/Card.gd"
 
 func set_resolved(in_resolved:bool):
 	.set_resolved(in_resolved)
