@@ -12,7 +12,7 @@ onready var resolved_stacks = [$resolved_holders/green_resolved_card_holder, $re
 onready var tmp_stacks = [$tmp_holders/tmp_card_holder_0, $tmp_holders/tmp_card_holder_1, $tmp_holders/tmp_card_holder_2]
 onready var resolved_btns = [$resolved_btns/red_resolve_btn, $resolved_btns/green_resolve_btn, $resolved_btns/white_resolve_btn]
 
-var cards_infos = [
+var card_infos = [
 	CardInfo.new(CardInfo.CardType.Char, 1), CardInfo.new(CardInfo.CardType.Char, 2), CardInfo.new(CardInfo.CardType.Char, 3), CardInfo.new(CardInfo.CardType.Char, 4), CardInfo.new(CardInfo.CardType.Char, 5), CardInfo.new(CardInfo.CardType.Char, 6), CardInfo.new(CardInfo.CardType.Char, 7), CardInfo.new(CardInfo.CardType.Char, 8), CardInfo.new(CardInfo.CardType.Char, 9),
 	CardInfo.new(CardInfo.CardType.Bamboo, 1), CardInfo.new(CardInfo.CardType.Bamboo, 2), CardInfo.new(CardInfo.CardType.Bamboo, 3), CardInfo.new(CardInfo.CardType.Bamboo, 4), CardInfo.new(CardInfo.CardType.Bamboo, 5), CardInfo.new(CardInfo.CardType.Bamboo, 6), CardInfo.new(CardInfo.CardType.Bamboo, 7), CardInfo.new(CardInfo.CardType.Bamboo, 8), CardInfo.new(CardInfo.CardType.Bamboo, 9),
 	CardInfo.new(CardInfo.CardType.Coin, 1), CardInfo.new(CardInfo.CardType.Coin, 2), CardInfo.new(CardInfo.CardType.Coin, 3), CardInfo.new(CardInfo.CardType.Coin, 4), CardInfo.new(CardInfo.CardType.Coin, 5), CardInfo.new(CardInfo.CardType.Coin, 6), CardInfo.new(CardInfo.CardType.Coin, 7), CardInfo.new(CardInfo.CardType.Coin, 8), CardInfo.new(CardInfo.CardType.Coin, 9),
@@ -28,17 +28,19 @@ var green_ready = false
 var white_ready = false
 var red_ready = false
 
+var dealt_index = 0
+
 func _ready():
 
 	for resolve_btn in resolved_btns:
 		resolve_btn.connect("resolved", self, "_on_resolved_pressed")
 
 	randomize()
-	cards_infos.shuffle()
+	card_infos.shuffle()
 	var card_number_scene = load("res://entities/number_card.tscn")
 	var special_card_scene = load("res://entities/special_card.tscn")
 	var p = get_node("resolved_holders/flower_resolved_card_holder")
-	for card_info in cards_infos:
+	for card_info in card_infos:
 		var card_inst
 		if(card_info.card_type < 3):
 			card_inst = card_number_scene.instance()
@@ -47,42 +49,30 @@ func _ready():
 		cards.append(card_inst)
 		card_inst.card_info = card_info
 		card_inst.connect("card_placed", self, "_on_card_placed")
+		card_inst.connect("card_dealt", self, "on_card_dealt")
+		card_inst.connect("card_transient", self, "on_card_transient")
 		p.add_child(card_inst)
 		p = card_inst
 	
 	var i_stack = 0
 	while (p as card) != null:
 		var parent = p.get_parent()
-		#parent.remove_child(p)
-		#stacks[i_stack % 8].get_node("stackable").add_child(p)
-		p.place(stacks[i_stack % 8].get_node("stackable"), 0.1 * i_stack)
-
+		p.place(stacks[i_stack % 8].get_node("stackable"), 0.1 * i_stack, 0.2)
 		stacks[i_stack % 8] = p
 		p = parent
 		i_stack+=1
-	
-	check_ends()
-	if cards.size() > 0:
-		_on_card_placed(cards[cards.size() - 1])
-
-func check_ends():
-	for e in stacks:
-		var c = e as card
-		if c.card_type == CardInfo.CardType.Flower:
-			c.get_parent().remove_child(c)
-			$resolved_holders/flower_resolved_card_holder.get_node("stackable").add_child(c)
 
 func try_resolve_card(in_card):
 	var resolved_h = resolved_stacks[in_card.card_type] as card_holder
 	var number_c = in_card as number_card
 	if resolved_h != null && number_c != null  && number_c.card_number == 1:
-		number_c.place(resolved_h.get_node("stackable"))
+		number_c.place(resolved_h.get_node("stackable"), 0.0, 0.2)
 		resolved_stacks[in_card.card_type] = number_c
 		return true
 	
 	var resolved_c = resolved_stacks[in_card.card_type] as number_card
 	if resolved_c != null && number_c != null && in_card.card_number - resolved_c.card_number == 1:
-		number_c.place(resolved_c.get_node("stackable"))
+		number_c.place(resolved_c.get_node("stackable"), 0.0, 0.2)
 		resolved_stacks[in_card.card_type] = number_c
 		return true
 	return false
@@ -102,6 +92,14 @@ func check_special(spot_avail: bool, special_cards):
 			return true
 	return false
 
+func on_card_transient(transient_card:card):
+	add_child(transient_card)
+
+func on_card_dealt(dealt_card:card):
+	dealt_index += 1
+	if dealt_index == 40:
+		_on_card_placed(dealt_card)
+
 func _on_card_placed(placed_card:card):
 	#iterate through cards to see if we can auto-resolve
 	var check_again = false
@@ -114,8 +112,7 @@ func _on_card_placed(placed_card:card):
 		if c.get_card_child() != null:
 			continue
 		if c.card_type == CardInfo.CardType.Flower && !c.resolved:
-			c.get_parent().remove_child(c)
-			$resolved_holders/flower_resolved_card_holder.get_node("stackable").add_child(c)
+			c.place($resolved_holders/flower_resolved_card_holder.get_node("stackable"), 0.0, 0.2)
 			c.set_resolved(true)
 			break
 		if c.card_type < 3 && !c.resolved: #if it's a number card try to resolve
@@ -161,7 +158,7 @@ func resolve_special(in_card_type:int):
 			specials.append(c)
 	var resolve_stack = get_resolve_holder(specials)
 	for s in specials:
-		s.place(resolve_stack.get_node("stackable"))
+		s.place(resolve_stack.get_node("stackable"), 0.0, 0.2)
 		s.set_resolved(true)
 
 func _on_resolved_pressed(card_type:int):
