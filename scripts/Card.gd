@@ -100,8 +100,6 @@ func place(target_stackable:Node2D, delay:float = 0.0, time:float = 0.0):
 	if(get_parent() == null):
 		return
 		
-	self.z_index = 255
-		
 	from_loc = self.global_position
 	get_parent().remove_child(self)
 	emit_signal("card_transient", self)
@@ -115,6 +113,9 @@ func place(target_stackable:Node2D, delay:float = 0.0, time:float = 0.0):
 
 func tween_method(val):
 	self.global_position = lerp(from_loc, desired_parent.global_position, val)
+	if !dealt:
+		$card_back.visible = false
+		self.z_index = 255
 
 func _on_tweener_tween_completed(_object, _key):
 	if(desired_parent):
@@ -186,3 +187,13 @@ func get_stackable_offset():
 func set_resolved(in_resolved:bool):
 	resolved = in_resolved
 	$stackable.set_position(Vector2(0, get_stackable_offset()))
+
+func reset():
+	$card_back.visible = true
+	resolved = false
+	$stackable.set_position(Vector2(0, 0))
+	temped = false
+	dealt = false
+	is_holding = false
+	desired_parent = null
+	from_loc = Vector2.ZERO

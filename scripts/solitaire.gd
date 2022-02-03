@@ -12,6 +12,8 @@ onready var resolved_stacks = [$resolved_holders/green_resolved_card_holder, $re
 onready var tmp_stacks = [$tmp_holders/tmp_card_holder_0, $tmp_holders/tmp_card_holder_1, $tmp_holders/tmp_card_holder_2]
 onready var resolved_btns = [$resolved_btns/red_resolve_btn, $resolved_btns/green_resolve_btn, $resolved_btns/white_resolve_btn]
 
+var game_stacks = []
+
 var card_infos = [
 	CardInfo.new(CardInfo.CardType.Char, 1), CardInfo.new(CardInfo.CardType.Char, 2), CardInfo.new(CardInfo.CardType.Char, 3), CardInfo.new(CardInfo.CardType.Char, 4), CardInfo.new(CardInfo.CardType.Char, 5), CardInfo.new(CardInfo.CardType.Char, 6), CardInfo.new(CardInfo.CardType.Char, 7), CardInfo.new(CardInfo.CardType.Char, 8), CardInfo.new(CardInfo.CardType.Char, 9),
 	CardInfo.new(CardInfo.CardType.Bamboo, 1), CardInfo.new(CardInfo.CardType.Bamboo, 2), CardInfo.new(CardInfo.CardType.Bamboo, 3), CardInfo.new(CardInfo.CardType.Bamboo, 4), CardInfo.new(CardInfo.CardType.Bamboo, 5), CardInfo.new(CardInfo.CardType.Bamboo, 6), CardInfo.new(CardInfo.CardType.Bamboo, 7), CardInfo.new(CardInfo.CardType.Bamboo, 8), CardInfo.new(CardInfo.CardType.Bamboo, 9),
@@ -39,7 +41,6 @@ func _ready():
 	card_infos.shuffle()
 	var card_number_scene = load("res://entities/number_card.tscn")
 	var special_card_scene = load("res://entities/special_card.tscn")
-	var p = get_node("resolved_holders/flower_resolved_card_holder")
 	for card_info in card_infos:
 		var card_inst
 		if(card_info.card_type < 3):
@@ -51,16 +52,46 @@ func _ready():
 		card_inst.connect("card_placed", self, "_on_card_placed")
 		card_inst.connect("card_dealt", self, "on_card_dealt")
 		card_inst.connect("card_transient", self, "on_card_transient")
-		p.add_child(card_inst)
-		p = card_inst
-	
-	var i_stack = 0
-	while (p as Card) != null:
+
+	stage_deck()
+	deal()
+
+func stage_deck():
+	randomize()
+	cards.shuffle()
+	var p = get_node("resolved_holders/flower_resolved_card_holder")
+	for c in cards:
+		c.reset()
+		if c.get_parent() != null:
+			c.get_parent().remove_child(c)
+		p.get_node("stackable").add_child(c)
+		p = c
+
+func deal():
+	game_stacks.clear()
+	game_stacks.append_array(stacks)
+	var delay = 0
+	for i in range(cards.size() - 1, -1, -1):
+		var p = cards[i] as Card
 		var parent = p.get_parent()
-		p.place(stacks[i_stack % 8].get_node("stackable"), 0.1 * i_stack, 0.2)
-		stacks[i_stack % 8] = p
+		p.set_resolved(false)
+		p.place(game_stacks[i % 8].get_node("stackable"), 0.1 * delay, 0.2)
+		p.get_node("stackable").set_position(Vector2(0, p.get_stackable_offset()))
+		game_stacks[i % 8] = p
 		p = parent
-		i_stack+=1
+		delay += 1
+
+func _unhandled_input(event):
+	if event is InputEventKey:
+		if event.pressed and event.scancode == KEY_R:
+			dealt_index = 0
+			green_ready = false
+			red_ready = false
+			white_ready = false
+			stage_deck()
+			
+		if event.pressed and event.scancode == KEY_D:
+			deal()
 
 func try_resolve_card(in_card):
 	var resolved_h = resolved_stacks[in_card.card_type] as card_holder
