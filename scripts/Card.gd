@@ -4,6 +4,7 @@ extends Node2D
 class_name Card
 
 const CardInfo = preload("CardInfo.gd")
+const Statics = preload("Statics.gd")
 export (CardInfo.CardType) var card_type setget set_card_type
 
 const card_holder = preload("card_holder.gd")
@@ -28,9 +29,11 @@ var dealt = false
 
 var from_loc = Vector2.ZERO
 var desired_parent = null
+var last_child:Card = null
 
 signal card_placed(placed_card)
 signal card_dealt(dealt_card)
+signal card_tweened(tweened_card)
 signal card_transient(transient_card)
 
 func _ready():
@@ -40,7 +43,6 @@ func _ready():
 	icon = $main_icon
 	if(icon != null):
 		init_texture()
-	pass
 
 func init_texture():
 	var main_icon_path:String;
@@ -96,14 +98,21 @@ func _process(_delta):
 func stackable_node():
 	return get_node("stackable")
 
-func place(target_stackable:Node2D, delay:float = 0.0, time:float = 0.0):
+func deal(target_stackable:Node2D):
+	if has_child():
+		last_child = get_card_child() as Card
+		$stackable.remove_child(last_child)
+	place(target_stackable, 0.0, Statics.CARD_SPEED)
+	emit_signal("card_dealt", self)
+	
+func place(target_stackable:Node2D, delay:float = 0.0, time:float = 0.0, offset:Vector2 = Vector2(0, 0)):
 	if(get_parent() == null):
 		return
 		
-	from_loc = self.global_position
+	from_loc = self.global_position + offset
 	get_parent().remove_child(self)
 	emit_signal("card_transient", self)
-	self.global_position = from_loc	
+	self.global_position = from_loc + offset
 	desired_parent = target_stackable
 	var tw = $tweener as Tween
 	tw.interpolate_method(self, "tween_method", 0.0, 1.0, time, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT, delay)
@@ -113,9 +122,9 @@ func place(target_stackable:Node2D, delay:float = 0.0, time:float = 0.0):
 
 func tween_method(val):
 	self.global_position = lerp(from_loc, desired_parent.global_position, val)
+	self.z_index = 255
 	if !dealt:
-		$card_back.visible = false
-		self.z_index = 255
+		$card_back.visible = false	
 
 func _on_tweener_tween_completed(_object, _key):
 	if(desired_parent):
@@ -125,7 +134,8 @@ func _on_tweener_tween_completed(_object, _key):
 	if dealt:
 		emit_signal("card_placed", self)
 	else:
-		emit_signal("card_dealt", self)
+		$stackable.position = Vector2(0, 30)
+		emit_signal("card_tweened", self)
 		dealt = true
 	self.position = Vector2.ZERO
 	self.z_index = 0
@@ -186,10 +196,13 @@ func get_stackable_offset():
 
 func set_resolved(in_resolved:bool):
 	resolved = in_resolved
+	$shadow.visible = !resolved
 	$stackable.set_position(Vector2(0, get_stackable_offset()))
 
 func reset():
+	$shadow.visible = false
 	$card_back.visible = true
+	z_index = 0
 	resolved = false
 	$stackable.set_position(Vector2(0, 0))
 	temped = false

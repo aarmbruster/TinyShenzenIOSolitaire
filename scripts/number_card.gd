@@ -25,3 +25,7 @@ func can_pick_up():
 		if(num_child != null && child.card_type != card_type && self.card_number - num_child.card_number == 1):
 			return num_child.can_pick_up()
 	return .can_pick_up()
+
+
+func _on_tweener_tween_completed(_object, _key):
+	._on_tweener_tween_completed(_object, _key)

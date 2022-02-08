@@ -113,3 +113,13 @@ btn_type = 2
 
 [node name="discard" parent="." instance=ExtResource( 5 )]
 position = Vector2( -100, -200 )
+
+[node name="deal_timer" type="Timer" parent="."]
+wait_time = 0.1
+
+[node name="redeal_timer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
+[connection signal="timeout" from="deal_timer" to="." method="_on_deal_timer_timeout"]
+[connection signal="timeout" from="redeal_timer" to="." method="_on_redeal_timer_timeout"]
