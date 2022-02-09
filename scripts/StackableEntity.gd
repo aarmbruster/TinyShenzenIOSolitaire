@@ -1,7 +1,7 @@
 extends Node2D
 
 const card = preload("Card.gd")
-const card_holder = preload("card_holder.gd")
+const card_holder = preload("CardHolder.gd")
 
 func can_accept_child(child:Card):
 	if(get_children().size() > 0):

@@ -1,12 +1,12 @@
 extends Node2D
 
-class_name solitaire
+class_name Solitaire
 
 const CardInfo = preload("CardInfo.gd") 
 const Card = preload("Card.gd")
 const Statics = preload("Statics.gd")
-const number_card = preload("number_card.gd")
-const card_holder = preload("card_holder.gd")
+const NumberCard = preload("NumberCard.gd")
+const CardHolder = preload("CardHolder.gd")
 
 onready var stacks = [ $stack_holders/stack_card_holder_0, $stack_holders/stack_card_holder_1, $stack_holders/stack_card_holder_2, $stack_holders/stack_card_holder_3, $stack_holders/stack_card_holder_4, $stack_holders/stack_card_holder_5, $stack_holders/stack_card_holder_6, $stack_holders/stack_card_holder_7]
 onready var resolved_stacks = [$resolved_holders/red_resolved_card_holder, $resolved_holders/green_resolved_card_holder, $resolved_holders/white_resolved_card_holder]
@@ -102,7 +102,7 @@ func on_card_tweened(tweened:Card):
 	if cards_tweened >= Statics.NUM_CARDS: # after all cards are dealt, check to see what we can automate on card tweened
 		_on_card_placed(tweened)
 		
-		var n = tweened as number_card
+		var n = tweened as NumberCard
 		if n != null && n.resolved:
 			resolved_stacks[n.card_type + 4].get_node("stack_side").visible = true
 			resolved_stacks[n.card_type + 4].get_node("stackable").position = Vector2(0, Statics.STACK_DELTA * -n.card_number)
@@ -145,8 +145,8 @@ func _unhandled_input(event):
 			stage_deck()
 			
 func try_resolve_card(in_card):
-	var resolved_h = rt_resolved_stacks[in_card.card_type] as card_holder
-	var number_c = in_card as number_card
+	var resolved_h = rt_resolved_stacks[in_card.card_type] as CardHolder
+	var number_c = in_card as NumberCard
 	# unique check when the card number is 1
 	if resolved_h != null && number_c != null && number_c.card_number == 1:
 		number_c.place(resolved_h.get_node("stackable"), 0.0, Statics.CARD_SPEED)
@@ -155,10 +155,10 @@ func try_resolve_card(in_card):
 		#resolved_stacks[in_card.card_type].get_node("stackable").position = Vector2(0, -Statics.STACK_DELTA * 4)
 		return true
 	# check for any other card number
-	var resolved_c = rt_resolved_stacks[in_card.card_type] as number_card
+	var resolved_c = rt_resolved_stacks[in_card.card_type] as NumberCard
 	if resolved_c != null && number_c != null && in_card.card_number - resolved_c.card_number == 1:
 		for resolved in rt_resolved_stacks:
-			var rn = resolved as number_card
+			var rn = resolved as NumberCard
 			if rn != null:
 				if rn.card_type == number_c.card_type:
 					continue

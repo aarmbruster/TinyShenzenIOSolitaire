@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://scripts/resolved_btn.gd" type="Script" id=1]
+[ext_resource path="res://scripts/ResolvedBtn.gd" type="Script" id=1]
 [ext_resource path="res://source_content/textures/button_green_down.png" type="Texture" id=2]
 [ext_resource path="res://source_content/textures/button_green_up.png" type="Texture" id=4]
 

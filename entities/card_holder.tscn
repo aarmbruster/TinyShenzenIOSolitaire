@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://scripts/card_holder.gd" type="Script" id=1]
-[ext_resource path="res://scripts/stackable_entity.gd" type="Script" id=2]
+[ext_resource path="res://scripts/CardHolder.gd" type="Script" id=1]
+[ext_resource path="res://scripts/StackableEntity.gd" type="Script" id=2]
 [ext_resource path="res://source_content/textures/stack_side.png" type="Texture" id=3]
 
 [sub_resource type="RectangleShape2D" id=1]

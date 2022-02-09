@@ -3,11 +3,10 @@ extends Node2D
 
 class_name Card
 
+const CardHolder = preload("CardHolder.gd")
 const CardInfo = preload("CardInfo.gd")
 const Statics = preload("Statics.gd")
 export (CardInfo.CardType) var card_type setget set_card_type
-
-const card_holder = preload("card_holder.gd")
 
 export var card_number:int = 1 setget set_card_number
 onready var icon:Sprite = get_node("main_icon")
@@ -149,8 +148,8 @@ func _on_TextureButton_button_down():
 func is_on_temp():
 	if get_parent() == null || get_parent().get_parent() == null:
 		return false
-	var p = get_parent().get_parent() as card_holder
-	return p!=null && p.holder_type == card_holder.HolderType.Temp
+	var p = get_parent().get_parent() as CardHolder
+	return p!=null && p.holder_type == CardHolder.HolderType.Temp
 
 func _on_TextureButton_button_up():
 	#temporary debug testing option for removing cards from a stack

@@ -4,7 +4,7 @@
 [ext_resource path="res://source_content/textures/card_back.png" type="Texture" id=2]
 [ext_resource path="res://source_content/textures/card_front.png" type="Texture" id=3]
 [ext_resource path="res://source_content/textures/large_icons/coins_1.png" type="Texture" id=4]
-[ext_resource path="res://scripts/stackable_entity.gd" type="Script" id=5]
+[ext_resource path="res://scripts/StackableEntity.gd" type="Script" id=5]
 [ext_resource path="res://source_content/textures/card_shadow.png" type="Texture" id=6]
 [ext_resource path="res://source_content/textures/small_icons/coins_sm.png" type="Texture" id=7]
 

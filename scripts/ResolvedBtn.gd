@@ -1,6 +1,6 @@
 extends Node2D
 
-class_name resolved_btn
+class_name ResolvedBtn
 
 var is_ready_to_resolve: bool = false
 var is_resolved: bool = false

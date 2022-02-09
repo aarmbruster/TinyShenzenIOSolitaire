@@ -1,6 +1,6 @@
 extends Card
 
-class_name number_card
+class_name NumberCard
 
 onready var number_top:Sprite = get_node("number_top")
 onready var number_bottom:Sprite = get_node("number_bottom")
@@ -21,7 +21,7 @@ func init_texture():
 func can_pick_up():
 	var child = get_card_child()
 	if(child != null):
-		var num_child = child as number_card
+		var num_child = child as NumberCard
 		if(num_child != null && child.card_type != card_type && self.card_number - num_child.card_number == 1):
 			return num_child.can_pick_up()
 	return .can_pick_up()
