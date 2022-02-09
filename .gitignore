@@ -5,3 +5,12 @@ export_presets.cfg
 
 # Imported translations (automatically generated from CSV files)
 *.translation
+
+# vscode generated files
+.vscode/
+
+# exported builds
+builds/
+
+# source content
+source_content/
