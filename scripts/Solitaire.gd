@@ -16,12 +16,12 @@ onready var resolved_btns = [$resolved_btns/red_resolve_btn, $resolved_btns/gree
 var game_stacks = []
 var rt_resolved_stacks = []
 var card_infos = [
-	CardInfo.new(CardInfo.CardType.Char, 1), CardInfo.new(CardInfo.CardType.Char, 2), CardInfo.new(CardInfo.CardType.Char, 3), CardInfo.new(CardInfo.CardType.Char, 4), CardInfo.new(CardInfo.CardType.Char, 5), CardInfo.new(CardInfo.CardType.Char, 6), CardInfo.new(CardInfo.CardType.Char, 7), CardInfo.new(CardInfo.CardType.Char, 8), CardInfo.new(CardInfo.CardType.Char, 9),
-	CardInfo.new(CardInfo.CardType.Bamboo, 1), CardInfo.new(CardInfo.CardType.Bamboo, 2), CardInfo.new(CardInfo.CardType.Bamboo, 3), CardInfo.new(CardInfo.CardType.Bamboo, 4), CardInfo.new(CardInfo.CardType.Bamboo, 5), CardInfo.new(CardInfo.CardType.Bamboo, 6), CardInfo.new(CardInfo.CardType.Bamboo, 7), CardInfo.new(CardInfo.CardType.Bamboo, 8), CardInfo.new(CardInfo.CardType.Bamboo, 9),
-	CardInfo.new(CardInfo.CardType.Coin, 1), CardInfo.new(CardInfo.CardType.Coin, 2), CardInfo.new(CardInfo.CardType.Coin, 3), CardInfo.new(CardInfo.CardType.Coin, 4), CardInfo.new(CardInfo.CardType.Coin, 5), CardInfo.new(CardInfo.CardType.Coin, 6), CardInfo.new(CardInfo.CardType.Coin, 7), CardInfo.new(CardInfo.CardType.Coin, 8), CardInfo.new(CardInfo.CardType.Coin, 9),
-	CardInfo.new(CardInfo.CardType.Red, 0), CardInfo.new(CardInfo.CardType.Red, 0), CardInfo.new(CardInfo.CardType.Red, 0), CardInfo.new(CardInfo.CardType.Red, 0),
-	CardInfo.new(CardInfo.CardType.Green, 0), CardInfo.new(CardInfo.CardType.Green, 0), CardInfo.new(CardInfo.CardType.Green, 0), CardInfo.new(CardInfo.CardType.Green, 0),
-	CardInfo.new(CardInfo.CardType.White, 0), CardInfo.new(CardInfo.CardType.White, 0), CardInfo.new(CardInfo.CardType.White, 0),CardInfo.new(CardInfo.CardType.White, 0),
+	CardInfo.new(CardInfo.CardType.Char, 1), 	CardInfo.new(CardInfo.CardType.Char, 2), 	CardInfo.new(CardInfo.CardType.Char, 3), 	CardInfo.new(CardInfo.CardType.Char, 4), CardInfo.new(CardInfo.CardType.Char, 5), CardInfo.new(CardInfo.CardType.Char, 6), CardInfo.new(CardInfo.CardType.Char, 7), CardInfo.new(CardInfo.CardType.Char, 8), CardInfo.new(CardInfo.CardType.Char, 9),
+	CardInfo.new(CardInfo.CardType.Bamboo, 1), 	CardInfo.new(CardInfo.CardType.Bamboo, 2), 	CardInfo.new(CardInfo.CardType.Bamboo, 3), 	CardInfo.new(CardInfo.CardType.Bamboo, 4), CardInfo.new(CardInfo.CardType.Bamboo, 5), CardInfo.new(CardInfo.CardType.Bamboo, 6), CardInfo.new(CardInfo.CardType.Bamboo, 7), CardInfo.new(CardInfo.CardType.Bamboo, 8), CardInfo.new(CardInfo.CardType.Bamboo, 9),
+	CardInfo.new(CardInfo.CardType.Coin, 1), 	CardInfo.new(CardInfo.CardType.Coin, 2), 	CardInfo.new(CardInfo.CardType.Coin, 3), 	CardInfo.new(CardInfo.CardType.Coin, 4), CardInfo.new(CardInfo.CardType.Coin, 5), CardInfo.new(CardInfo.CardType.Coin, 6), CardInfo.new(CardInfo.CardType.Coin, 7), CardInfo.new(CardInfo.CardType.Coin, 8), CardInfo.new(CardInfo.CardType.Coin, 9),
+	CardInfo.new(CardInfo.CardType.Red, 0), 	CardInfo.new(CardInfo.CardType.Red, 0), 	CardInfo.new(CardInfo.CardType.Red, 0), 	CardInfo.new(CardInfo.CardType.Red, 0),
+	CardInfo.new(CardInfo.CardType.Green, 0), 	CardInfo.new(CardInfo.CardType.Green, 0), 	CardInfo.new(CardInfo.CardType.Green, 0), 	CardInfo.new(CardInfo.CardType.Green, 0),
+	CardInfo.new(CardInfo.CardType.White, 0), 	CardInfo.new(CardInfo.CardType.White, 0), 	CardInfo.new(CardInfo.CardType.White, 0),	CardInfo.new(CardInfo.CardType.White, 0),
 	CardInfo.new(CardInfo.CardType.Flower, 0)
 ]
 
@@ -104,8 +104,8 @@ func on_card_tweened(tweened:Card):
 		
 		var n = tweened as NumberCard
 		if n != null && n.resolved:
-			resolved_stacks[n.card_type + 4].get_node("stack_side").visible = true
-			resolved_stacks[n.card_type + 4].get_node("stackable").position = Vector2(0, Statics.STACK_DELTA * -n.card_number)
+			resolved_stacks[n.card_type - 4].get_node("stack_side").visible = true
+			resolved_stacks[n.card_type - 4].get_node("stackable").position = Vector2(0, Statics.STACK_DELTA * -n.card_number)
 
 	
 func on_card_dealt(dealt_card:Card):
@@ -151,8 +151,6 @@ func try_resolve_card(in_card):
 	if resolved_h != null && number_c != null && number_c.card_number == 1:
 		number_c.place(resolved_h.get_node("stackable"), 0.0, Statics.CARD_SPEED)
 		rt_resolved_stacks[in_card.card_type] = number_c
-		#resolved_stacks[in_card.card_type].get_node("stack_side").visible = true
-		#resolved_stacks[in_card.card_type].get_node("stackable").position = Vector2(0, -Statics.STACK_DELTA * 4)
 		return true
 	# check for any other card number
 	var resolved_c = rt_resolved_stacks[in_card.card_type] as NumberCard
@@ -164,12 +162,9 @@ func try_resolve_card(in_card):
 					continue
 				if number_c.card_number - rn.card_number > 1:
 					return false
-			else:
+			elif number_c.card_number >  2:
 				return false
 		number_c.place(resolved_c.get_node("stackable"), 0.0, Statics.CARD_SPEED)
-		rt_resolved_stacks[in_card.card_type] = number_c
-		#resolved_stacks[in_card.card_type].get_node("stack_side").visible = true
-		#resolved_stacks[in_card.card_type].get_node("stackable").position = Vector2(0, -Statics.STACK_DELTA * resolved_c.card_number * 4)
 		return true
 	return false
 
@@ -192,6 +187,10 @@ func on_card_transient(transient_card:Card):
 	add_child(transient_card)
 
 func _on_card_placed(placed_card:Card):
+	var n_card = placed_card as NumberCard # check update the resolved stack ends
+	if n_card != null && n_card.resolved:
+		rt_resolved_stacks[n_card.card_type] = placed_card
+
 	#iterate through cards to see if we can auto-resolve
 	var check_again = false
 	var white_cards = []
