@@ -25,27 +25,27 @@ _global_script_classes=[ {
 "path": "res://scripts/CardInfo.gd"
 }, {
 "base": "Card",
-"class": "number_card",
+"class": "NumberCard",
 "language": "GDScript",
-"path": "res://scripts/number_card.gd"
+"path": "res://scripts/NumberCard.gd"
 }, {
 "base": "Node2D",
-"class": "resolved_btn",
+"class": "ResolvedBtn",
 "language": "GDScript",
-"path": "res://scripts/resolved_btn.gd"
+"path": "res://scripts/ResolvedBtn.gd"
 }, {
 "base": "Node2D",
-"class": "solitaire",
+"class": "Solitaire",
 "language": "GDScript",
-"path": "res://scripts/solitaire.gd"
+"path": "res://scripts/Solitaire.gd"
 } ]
 _global_script_class_icons={
 "Card": "",
 "CardColors": "",
 "CardInfo": "",
-"number_card": "",
-"resolved_btn": "",
-"solitaire": ""
+"NumberCard": "",
+"ResolvedBtn": "",
+"Solitaire": ""
 }
 
 [application]
